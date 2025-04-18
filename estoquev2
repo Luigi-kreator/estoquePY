@@ -1,0 +1,115 @@
+lista = []
+
+def adicionarProduto():
+    nome = input('Digite o nome do produto: ').strip() # .strip() remove espaços antes e ou depois do texto
+    if not nome:
+        print("Nome do produto não pode ser vazio.")
+        return
+    
+    for produto in lista:
+        if nome.lower() == produto['nome'].lower():
+            try:
+                novaQuant = int(input('Digite a adição de quantidade deste produto: '))
+                if novaQuant < 0:
+                    print("Quantidade não pode ser negativa.")
+                    return
+                produto['quantidade'] += novaQuant
+                print('Informação atualizada.')
+                return
+            except ValueError:
+                print('Entrada inválida! Digite um número inteiro.')
+                return
+    
+    while True:
+        try:
+            preco_str = input('Digite o preço deste Produto: ')
+            preco = float(preco_str.replace(',', '.'))
+            if preco < 0:
+                print("Preço não pode ser negativo.")
+                continue
+            break
+        except ValueError:
+            print('Preço inválido! Use apenas números. Ex: 10.99 ou 10,99')
+    
+    while True:
+        try:
+            quant = int(input('Digite a quantidade deste Produto em estoque: '))
+            if quant < 0:
+                print("Quantidade não pode ser negativa.")
+                continue
+            break
+        except ValueError:
+            print("Quantidade inválida! Digite um número inteiro.")
+    
+    produto = {
+        'nome': nome,
+        'preço': preco,
+        'quantidade': quant
+    }
+    lista.append(produto)
+    print('Produto adicionado com sucesso.')
+
+def venderProduto():
+    if not lista:
+        print('Não existe nenhum produto à venda.')
+        return
+    
+    nome = input('Digite o nome do produto a ser vendido: ').strip()
+    for produto in lista:
+        if nome.lower() == produto['nome'].lower():
+            try:
+                quant = int(input(f'Digite a quantidade de {nome} a ser vendido: '))
+                if quant <= 0:
+                    print("A quantidade deve ser maior que zero.")
+                    return
+                if quant <= produto['quantidade']:
+                    produto['quantidade'] -= quant
+                    print('Venda realizada com sucesso!')
+                else:
+                    print('Quantidade em estoque insuficiente.')
+                return
+            except ValueError:
+                print('Entrada inválida! Digite um número inteiro.')
+                return
+    print('Produto não encontrado no estoque.')
+
+def valorTotal():
+    if not lista:
+        print('Não tem nenhum produto em estoque.')
+        return
+    valor_total = sum(produto['preço'] * produto['quantidade'] for produto in lista)
+    print(f'O valor total em produtos no estoque é: R${valor_total:.2f}')
+
+def listarProduto():
+    if not lista:
+        print('Não tem nenhum produto na lista.')
+        return
+    for produto in lista:
+        print(f"Nome: {produto['nome']}, Preço: R${produto['preço']:.2f}, Quantidade: {produto['quantidade']}")
+
+while True:
+    print('\n[Gerenciador de Estoque de Produto]')
+    print('[1] Adicionar produto')
+    print('[2] Vender produto')
+    print('[3] Ver valor total')
+    print('[4] Listar produtos')
+    print('[5] Sair')
+
+    try:
+        escolha = int(input('Escolha uma opção: '))
+        if escolha == 1:
+            adicionarProduto()
+        elif escolha == 2:
+            venderProduto()
+        elif escolha == 3:
+            valorTotal()
+        elif escolha == 4:
+            listarProduto()
+        elif escolha == 5:
+            print('Saindo do sistema...')
+            break
+        else:
+            print('Opção inválida! Escolha um número entre 1 e 5.')
+    except ValueError:
+        print('Entrada inválida! Digite um número.')
+#DESENVOLVIDO POR LUIGI HISATSUGA PEREIRA
